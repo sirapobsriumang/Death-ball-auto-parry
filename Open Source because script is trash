@@ -1,0 +1,28 @@
+local ball = game.Workspace:WaitForChild("Part")
+local highlight = ball:WaitForChild("Highlight")
+local player = game.Players.LocalPlayer
+local distanceThreshold = 15
+local RB = Color3.new(1, 0, 0)
+local virtualInputManager = game:GetService("VirtualInputManager")
+
+local function isWithinDistance()
+    local playerCharacter = player.Character
+    if playerCharacter and playerCharacter:FindFirstChild("HumanoidRootPart") then
+        local distance = (ball.Position - playerCharacter.HumanoidRootPart.Position).Magnitude
+        return distance <= distanceThreshold
+    end
+    return false
+end
+
+local function Parry()
+    if highlight.FillColor == RB and isWithinDistance() then
+        virtualInputManager:SendKeyEvent(true, "F", false, game)
+    end
+end
+
+while true do
+    if highlight.FillColor == RB then
+        Parry()
+    end
+    wait(0.1) 
+end
